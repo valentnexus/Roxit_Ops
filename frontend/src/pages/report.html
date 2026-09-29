@@ -1,0 +1,83 @@
+      <!-- ==================== REPORT PAGE ==================== -->
+      <section id="reportPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-6 border-b pb-4 border-slate-200">
+            <div class="flex items-center space-x-3">
+              <i class="fa-solid fa-file-csv text-2xl text-cyan-600"></i>
+              <h2 class="text-2xl font-extrabold text-slate-800">Report</h2>
+            </div>
+          </div>
+
+          <div class="flex border-b border-slate-200 mb-4 overflow-x-auto">
+            <button onclick="switchReportTab('PT')" class="report-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-teal-500 text-teal-700 hover:bg-slate-50 transition whitespace-nowrap" data-report-tab="PT">
+              <i class="fa-solid fa-user mr-2"></i> Personal Training
+            </button>
+            <button onclick="switchReportTab('GT')" class="report-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition whitespace-nowrap" data-report-tab="GT">
+              <i class="fa-solid fa-people-group mr-2"></i> Group Training
+            </button>
+            <button onclick="switchReportTab('MG')" class="report-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition whitespace-nowrap" data-report-tab="MG">
+              <i class="fa-solid fa-users mr-2"></i> Manual Group
+            </button>
+            <button onclick="switchReportTab('TIO')" class="report-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition whitespace-nowrap" data-report-tab="TIO">
+              <i class="fa-solid fa-clock mr-2"></i> Time In/Out
+            </button>
+          </div>
+
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+            <div class="flex flex-wrap gap-3 items-center">
+              <input type="text" id="reportSearchStaff" placeholder="Cari nama staff..." oninput="renderReportTable()" class="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+              <select id="reportDateFilter" onchange="handleReportDateFilterChange()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                <option value="all" selected>All Dates</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="thisMonth">This Month</option>
+                <option value="lastMonth">Last Month</option>
+                <option value="custom">Custom Range</option>
+              </select>
+              <div id="reportCustomDateRange" class="hidden flex gap-2 items-center">
+                <input type="date" id="reportDateFrom" onchange="renderReportTable()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                <span class="text-slate-400 text-sm">-</span>
+                <input type="date" id="reportDateTo" onchange="renderReportTable()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+              </div>
+
+              <!-- Filter Status (multi-select via checkbox dropdown) -->
+              <div class="relative">
+                <button type="button" onclick="toggleReportStatusDropdown()" id="reportStatusFilterBtn" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none flex items-center gap-2">
+                  <span id="reportStatusFilterLabel">All Status</span>
+                  <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                </button>
+                <div id="reportStatusDropdown" class="hidden absolute z-20 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg p-3 space-y-2 w-40">
+                  <label class="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" class="report-status-checkbox" value="Pending" checked onchange="handleReportStatusFilterChange()"> Pending
+                  </label>
+                  <label class="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" class="report-status-checkbox" value="Success" checked onchange="handleReportStatusFilterChange()"> Success
+                  </label>
+                  <label class="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" class="report-status-checkbox" value="Rejected" checked onchange="handleReportStatusFilterChange()"> Rejected
+                  </label>
+                </div>
+              </div>
+
+              <span id="reportRecordCount" class="text-sm text-slate-500">Showing 0 records</span>
+            </div>
+            <button type="button" onclick="exportReportCsv()" id="reportExportBtn" class="text-sm bg-teal-500 hover:bg-teal-600 text-white font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
+              <i class="fa-solid fa-file-export mr-2"></i> Export CSV
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead id="reportTableHead" class="bg-slate-100"></thead>
+              <tbody id="reportTableBody">
+                <tr>
+                  <td colspan="10" class="px-4 py-4 text-center text-slate-400">
+                    <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+

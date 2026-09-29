@@ -1,0 +1,248 @@
+      <!-- ==================== PT PORTAL PAGE ==================== -->
+      <section id="manualCuttingPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center space-x-3 mb-6 border-b pb-4 border-slate-200">
+            <i class="fa-solid fa-scissors text-2xl text-sky-600"></i>
+            <h2 class="text-2xl font-extrabold text-slate-800">Manual Cutting</h2>
+          </div>
+
+          <!-- Tab Navigation -->
+          <div class="flex border-b border-slate-200 mb-6">
+            <button onclick="switchManualCuttingTab('personal')" class="manual-cutting-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-teal-500 text-teal-700 hover:bg-slate-50 transition active" data-tab="personal">
+              <i class="fa-solid fa-user mr-2"></i> Personal Training
+            </button>
+            <button onclick="switchManualCuttingTab('group')" class="manual-cutting-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="group">
+              <i class="fa-solid fa-users mr-2"></i> Group Training
+            </button>
+            <button onclick="switchManualCuttingTab('manualgroup')" class="manual-cutting-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="manualgroup">
+              <i class="fa-solid fa-user-plus mr-2"></i> Add Manual Group
+            </button>
+          </div>
+
+          <!-- Personal Training Tab Content -->
+          <div id="personalTrainingTab" class="manual-cutting-tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Personal Training Form -->
+              <div class="md:col-span-1 bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-2 mb-4 border-b pb-3 border-slate-100">
+                  <i class="fa-solid fa-user text-sky-600"></i>
+                  <h3 class="font-extrabold text-slate-800">Personal Training Form</h3>
+                </div>
+
+                <form id="formPersonalTraining" onsubmit="submitPersonalTrainingForm(event)" class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+                    <select id="ptClub" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Club --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Personal Trainer</label>
+                    <input type="text" id="ptName" placeholder="Nama PT" required readonly class="w-full text-sm bg-slate-200 text-slate-600 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-not-allowed">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Member</label>
+                    <input type="text" id="ptMember" placeholder="Member (#1120)" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Session Type</label>
+                    <select id="ptSessionType" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Session Type --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Tanggal</label>
+                    <input type="date" id="ptSessionDate" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - Start</label>
+                    <input type="time" id="ptTimeStart" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - End</label>
+                    <input type="time" id="ptTimeEnd" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <button type="submit" id="ptSubmitFormBtn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md btn-press transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Kirim Form
+                  </button>
+                </form>
+              </div>
+
+              <!-- Exercise Log Container -->
+              <div class="md:col-span-2 bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between mb-4 border-b pb-3 border-slate-100">
+                  <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-dumbbell text-sky-600"></i>
+                    <h3 class="font-extrabold text-slate-800">Add Log Exercise</h3>
+                  </div>
+                  <button type="button" onclick="addExerciseForm()" class="text-sm bg-teal-500 hover:bg-teal-600 text-white font-bold py-1 px-3 rounded-lg transition">
+                    <i class="fa-solid fa-plus mr-1"></i> Add Exercise
+                  </button>
+                </div>
+
+                <div id="exerciseFormsContainer" class="space-y-4">
+                  <!-- Exercise 1 (default) -->
+                  <div class="exercise-form bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                      <label class="block text-xs font-bold text-slate-600">Exercise Name</label>
+                      <button type="button" onclick="removeExerciseForm(this)" class="text-xs text-red-500 hover:text-red-700 font-bold">
+                        <i class="fa-solid fa-trash mr-1"></i> Remove
+                      </button>
+                    </div>
+                    <input type="text" placeholder="Contoh: Bench Press" required class="w-full text-sm bg-white border border-slate-200 rounded-lg px-3 py-2 mb-4 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none exercise-name">
+
+                    <div class="grid grid-cols-5 gap-2 mb-3">
+                      <div class="text-center text-xs font-bold text-slate-600">Set 1</div>
+                      <div class="text-center text-xs font-bold text-slate-600">Set 2</div>
+                      <div class="text-center text-xs font-bold text-slate-600">Set 3</div>
+                      <div class="text-center text-xs font-bold text-slate-600">Set 4</div>
+                      <div class="text-center text-xs font-bold text-slate-600">Set 5</div>
+                    </div>
+
+                    <div class="space-y-2">
+                      <div>
+                        <label class="text-xs font-bold text-slate-600">Weight(Kg)</label>
+                        <div class="grid grid-cols-5 gap-2">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="text-xs font-bold text-slate-600">Repetition</label>
+                        <div class="grid grid-cols-5 gap-2">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Group Training Tab Content -->
+          <div id="groupTrainingTab" class="manual-cutting-tab-content hidden">
+            <div class="flex justify-center">
+              <div class="w-full max-w-md bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-2 mb-4 border-b pb-3 border-slate-100">
+                  <i class="fa-solid fa-users text-sky-600"></i>
+                  <h3 class="font-extrabold text-slate-800">Group Training Form</h3>
+                </div>
+
+                <form id="formGroupTraining" onsubmit="submitGroupTrainingForm(event)" class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+                    <select id="gtClub" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Club --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Instruktur</label>
+                    <input type="text" id="gtInstruktur" placeholder="Nama Instruktur" required readonly class="w-full text-sm bg-slate-200 text-slate-600 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-not-allowed">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Member</label>
+                    <input type="text" id="gtMember" placeholder="Nama Member" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Session Type</label>
+                    <select id="gtSessionType" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Session Type --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Tanggal</label>
+                    <input type="date" id="gtSessionDate" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - Start</label>
+                    <input type="time" id="gtTimeStart" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - End</label>
+                    <input type="time" id="gtTimeEnd" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <button type="submit" id="gtSubmitFormBtn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md btn-press transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Kirim Form
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Manual Group Tab Content -->
+          <div id="manualgroupTab" class="manual-cutting-tab-content hidden">
+            <div class="flex justify-center">
+              <div class="w-full max-w-md bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-2 mb-4 border-b pb-3 border-slate-100">
+                  <i class="fa-solid fa-user-plus text-sky-600"></i>
+                  <h3 class="font-extrabold text-slate-800">Add Manual Group</h3>
+                </div>
+
+                <form id="formManualGroup" onsubmit="submitManualGroupForm(event)" class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+                    <select id="mgClub" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Club --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Instruktur</label>
+                    <input type="text" id="mgInstruktur" placeholder="Nama Instruktur" required readonly class="w-full text-sm bg-slate-200 text-slate-600 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-not-allowed">
+                  </div>
+
+                  <div>
+                    <div class="flex items-center justify-between mb-1">
+                      <label class="block text-xs font-bold text-slate-600">Member</label>
+                      <button type="button" onclick="addMGMemberField()" class="text-xs text-teal-600 hover:text-teal-700 font-bold">
+                        <i class="fa-solid fa-plus mr-1"></i> Add Member
+                      </button>
+                    </div>
+                    <div id="mgMemberFieldsContainer" class="space-y-2">
+                      <!-- Member fields populated via JS -->
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Schedule - Tanggal</label>
+                    <input type="date" id="mgScheduleDate" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Schedule - Jam</label>
+                    <input type="time" id="mgScheduleTime" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <button type="submit" id="mgSubmitFormBtn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md btn-press transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Kirim Form
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+

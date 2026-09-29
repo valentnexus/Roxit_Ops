@@ -1,0 +1,26 @@
+{
+  "name": "roxit-ops-backend",
+  "version": "0.1.0",
+  "description": "Roxit Ops - Node.js backend (Google Sheets as transitional database)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:setup": "node scripts/setupDatabase.js",
+    "test": "node --test \"tests/*.test.js\""
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "googleapis": "^182.0.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+# JANGAN pernah commit file key service account
+*service-account*.json
+*credentials*.json

@@ -1,0 +1,125 @@
+  <!-- ==================== APPLICATION ==================== -->
+  <div id="appContainer" class="app-container">
+    <!-- Sidebar Menu Overlay (Mobile only) -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar Menu (Fixed) -->
+    <nav id="sidebarMenu" class="sidebar-menu">
+      <div class="px-4 py-6 border-b border-slate-200">
+        <div class="flex items-center justify-center space-x-2">
+          <i id="sidebarLogoIcon" class="fa-solid fa-spinner fa-spin text-2xl text-teal-500"></i>
+        </div>
+      </div>
+
+      <ul class="space-y-1 px-4 pb-4">
+        <li>
+          <button onclick="switchPage('dashboard')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="dashboard">
+            <i class="fa-solid fa-home mr-3 text-teal-500"></i> Dashboard
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('manualCutting')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="manualCutting">
+            <i class="fa-solid fa-scissors mr-3 text-sky-500"></i> Manual Cutting
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('timeTracking')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="timeTracking">
+            <i class="fa-solid fa-clock mr-3 text-orange-500"></i> Time Tracking
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('adminOps')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="adminOps">
+            <i class="fa-solid fa-cogs mr-3 text-purple-500"></i> Operations
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('report')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="report">
+            <i class="fa-solid fa-file-csv mr-3 text-cyan-600"></i> Report
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('staff')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="staff">
+            <i class="fa-solid fa-users mr-3 text-emerald-500"></i> Manage Staff
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('masterData')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="masterData">
+            <i class="fa-solid fa-database mr-3 text-rose-500"></i> Master data
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Header Top (Fixed) -->
+    <header class="header-top">
+      <div class="flex items-center justify-between">
+        <!-- Mobile: Hamburger + Logo -->
+        <div class="md:hidden flex items-center gap-3">
+          <button onclick="toggleSidebar()" class="hamburger-btn text-xl text-slate-700">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="flex items-center space-x-2">
+            <i id="mobileLogoIcon" class="fa-solid fa-spinner fa-spin text-xl text-teal-500"></i>
+          </div>
+        </div>
+
+        <!-- Desktop: Breadcrumb + User Name -->
+        <div class="hidden md:flex items-center gap-3 text-sm">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+              <i class="fa-solid fa-user-circle text-teal-600 text-lg"></i>
+            </div>
+            <span id="breadcrumbUserName" class="font-bold text-slate-700">-</span>
+          </div>
+          <i class="fa-solid fa-chevron-right text-slate-400"></i>
+          <span id="breadcrumbPage" class="text-slate-500">Dashboard</span>
+        </div>
+
+        <!-- Profile (Right) with User Name -->
+        <div class="relative flex items-center gap-2">
+          <span id="headerUserName" class="hidden md:inline text-sm font-bold text-slate-700">-</span>
+          <button onclick="toggleProfileMenu()" class="flex items-center gap-2 hover:opacity-70 transition">
+            <div id="headerAvatar" class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white overflow-hidden">
+              <i class="fa-solid fa-user text-lg"></i>
+            </div>
+            <i class="fa-solid fa-chevron-down text-slate-700 hidden md:inline"></i>
+          </button>
+
+          <!-- Profile Dropdown Card -->
+          <div id="profileMenu" class="profile-dropdown-menu hidden">
+            <div class="profile-header-card">
+              <div id="profileDropdownAvatar" class="profile-avatar">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div class="profile-info">
+                <div class="profile-info-name" id="profileCardName">-</div>
+                <div class="profile-info-email" id="profileCardEmail">-</div>
+              </div>
+            </div>
+
+            <button onclick="openMyProfile()" class="profile-menu-item w-full">
+              <i class="fa-solid fa-user"></i> Profile
+            </button>
+            <button onclick="switchPage('changePassword')" class="profile-menu-item w-full">
+              <i class="fa-solid fa-key"></i> Change Password
+            </button>
+            <button onclick="handleLogout()" class="profile-menu-item logout w-full">
+              <i class="fa-solid fa-sign-out-alt"></i> Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-layout main-content">
+
+      <!-- Toast Notification -->
+      <div id="toast" class="hidden fixed bottom-4 right-4 z-50 p-4 rounded-xl text-sm font-medium shadow-lg transition-all transform duration-300 flex items-center justify-between max-w-sm">
+        <div class="flex items-center space-x-2">
+          <i id="toastIcon" class="fa-solid"></i>
+          <span id="toastMessage"></span>
+        </div>
+        <button onclick="hideToast()" class="text-current opacity-70 hover:opacity-100"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+

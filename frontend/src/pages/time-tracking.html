@@ -1,0 +1,51 @@
+      <!-- ==================== TIME TRACKING PAGE ==================== -->
+      <section id="timeTrackingPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center space-x-3 mb-6 border-b pb-4 border-slate-200">
+            <i class="fa-solid fa-clock text-2xl text-orange-600"></i>
+            <h2 class="text-2xl font-extrabold text-slate-800">Time Tracking</h2>
+          </div>
+
+          <!-- Time Clock Card -->
+          <div class="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl p-6 mb-6 border border-teal-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Personal Trainer</label>
+                <input type="text" id="tioPTName" placeholder="Nama PT" required readonly class="w-full text-sm bg-slate-200 text-slate-600 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-not-allowed">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Member</label>
+                <input type="text" id="tioMember" placeholder="Nama Member" required class="w-full text-sm bg-white border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-teal-500 outline-none">
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <button onclick="handleTimeClock('Time In')" id="timeClockInBtn" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2.5 px-5 rounded-xl transition btn-press">
+                <i class="fa-solid fa-right-to-bracket mr-2"></i> Time In
+              </button>
+              <button onclick="handleTimeClock('Time Out')" id="timeClockOutBtn" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2.5 px-5 rounded-xl transition btn-press">
+                <i class="fa-solid fa-right-from-bracket mr-2"></i> Time Out
+              </button>
+            </div>
+          </div>
+
+          <!-- Time In/Out History -->
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <div class="flex items-center justify-between mb-4 border-b pb-3 border-slate-100">
+              <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-history text-orange-600"></i>
+                <h3 class="font-extrabold text-slate-800">Time In/Out History</h3>
+              </div>
+              <button onclick="loadTimeInOutHistory()" class="text-xs text-orange-600 font-semibold hover:underline">
+                <i class="fa-solid fa-rotate-right mr-1"></i> Refresh
+              </button>
+            </div>
+
+            <div id="timeHistoryContainer" class="space-y-2 max-h-96 overflow-y-auto">
+              <p class="text-center text-slate-400 py-4">
+                <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat riwayat...
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+

@@ -1,0 +1,180 @@
+      <section id="masterDataPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100">
+          <!-- Tab Navigation -->
+          <div class="flex border-b border-slate-200">
+            <button onclick="switchMasterDataTab('role')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition active" data-tab="role">
+              <i class="fa-solid fa-shield mr-2"></i> Role
+            </button>
+            <button onclick="switchMasterDataTab('permission')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="permission">
+              <i class="fa-solid fa-lock mr-2"></i> Permission
+            </button>
+            <button onclick="switchMasterDataTab('club')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="club">
+              <i class="fa-solid fa-building mr-2"></i> Club
+            </button>
+            <button onclick="switchMasterDataTab('sessiontype')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="sessiontype">
+              <i class="fa-solid fa-list mr-2"></i> Session Type
+            </button>
+            <button onclick="switchMasterDataTab('masterAuditLog')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="masterAuditLog">
+              <i class="fa-solid fa-clipboard-list mr-2"></i> Audit Log
+            </button>
+          </div>
+
+          <div class="p-6">
+            <!-- ROLE TAB -->
+            <div id="roleTab" class="master-data-content">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+                <h3 class="font-bold text-lg text-slate-800">Manage Roles</h3>
+                <button onclick="openRoleModal()" id="masterAddRoleBtn" class="w-full md:w-auto bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-plus"></i> Add Role
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Role ID</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Role Name</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Description</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="roleTableBody">
+                    <tr>
+                      <td colspan="4" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat roles...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- PERMISSION TAB -->
+            <div id="permissionTab" class="master-data-content hidden">
+              <h3 class="font-bold text-lg text-slate-800 mb-4">Permission</h3>
+
+              <div class="mb-4 max-w-xs">
+                <label for="permissionRoleSelect" class="block text-xs font-bold text-slate-500 uppercase mb-1">Pilih Role</label>
+                <select id="permissionRoleSelect" onchange="loadPermissionMatrix()" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                  <option value="">Memuat role...</option>
+                </select>
+              </div>
+
+              <div id="permissionSuperAdminNote" class="hidden mb-4 text-sm bg-amber-50 border border-amber-200 text-amber-700 rounded-lg px-4 py-3">
+                <i class="fa-solid fa-circle-info mr-2"></i> Super Admin selalu punya akses penuh ke semua module dan tidak bisa diubah.
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Module</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">View</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Add</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Edit</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Delete</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Export</th>
+                    </tr>
+                  </thead>
+                  <tbody id="permissionTableBody">
+                    <tr>
+                      <td colspan="6" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-6 flex justify-end">
+                <button type="button" onclick="savePermissionMatrix()" id="permissionSaveBtn" class="bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-2 rounded-lg transition">
+                  <i class="fa-solid fa-floppy-disk mr-2"></i> Save Changes
+                </button>
+              </div>
+            </div>
+
+            <!-- CLUB TAB -->
+            <div id="clubTab" class="master-data-content hidden">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+                <h3 class="font-bold text-lg text-slate-800">Manage Clubs</h3>
+                <button onclick="openClubModal()" id="masterAddClubBtn" class="w-full md:w-auto bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-plus"></i> Add Club
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Club ID</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Club Name</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Location</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="clubTableBody">
+                    <tr>
+                      <td colspan="4" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat clubs...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- SESSION TYPE TAB -->
+            <div id="sessiontypeTab" class="master-data-content hidden">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+                <h3 class="font-bold text-lg text-slate-800">Manage Session Types</h3>
+                <button onclick="openSessionTypeModal()" id="masterAddSessionTypeBtn" class="w-full md:w-auto bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-plus"></i> Add Session Type
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Session Type ID</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Session Name</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Description</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sessiontypeTableBody">
+                    <tr>
+                      <td colspan="4" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat session types...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="masterAuditLogTab" class="master-data-content hidden">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+                <h3 class="font-bold text-lg text-slate-800">Audit Log</h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Timestamp</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">User</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Action</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody id="masterAuditLogTableBody">
+                    <tr>
+                      <td colspan="4" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat audit log...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

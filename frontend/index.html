@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roxit Ops - Fitness Club Monitoring</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js (untuk grafik tren di Dashboard) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/styles/main.css">
+</head>
+<body>
+
+
+  <!-- ==================== LOGIN PAGE ==================== -->
+  <div id="loginPage" class="login-container">
+    <div class="w-full max-w-md px-6">
+      <div class="bg-white rounded-2xl shadow-2xl p-8">
+        <div class="text-center mb-8">
+          <i id="loginLogoIcon" class="fa-solid fa-spinner fa-spin text-4xl text-teal-500 mb-4"></i>
+          <p class="text-slate-500 text-sm mt-2">Fitness Club Monitoring System</p>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">Email</label>
+            <input 
+              type="email" 
+              id="loginEmail" 
+              placeholder="nama@gmail.com" 
+              required
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none"
+            >
+            <p class="text-xs text-slate-500 mt-1">Format: nama@gmail.com</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">Password</label>
+            <input 
+              type="password" 
+              id="loginPassword" 
+              placeholder="Masukkan password" 
+              required
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none"
+            >
+          </div>
+
+          <div id="loginError" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl text-sm"></div>
+
+          <div class="flex items-center">
+            <input type="checkbox" id="rememberMe" class="w-4 h-4 accent-teal-500 cursor-pointer">
+            <label for="rememberMe" class="ml-2 text-sm text-slate-600 cursor-pointer">Remember Me</label>
+          </div>
+
+          <button 
+            type="submit" 
+            class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2.5 rounded-xl transition-all btn-press"
+          >
+            <i class="fa-solid fa-right-to-bracket mr-2"></i> Login
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== APPLICATION ==================== -->
+  <div id="appContainer" class="app-container">
+    <!-- Sidebar Menu Overlay (Mobile only) -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar Menu (Fixed) -->
+    <nav id="sidebarMenu" class="sidebar-menu">
+      <div class="px-4 py-6 border-b border-slate-200">
+        <div class="flex items-center justify-center space-x-2">
+          <i id="sidebarLogoIcon" class="fa-solid fa-spinner fa-spin text-2xl text-teal-500"></i>
+        </div>
+      </div>
+
+      <ul class="space-y-1 px-4 pb-4">
+        <li>
+          <button onclick="switchPage('dashboard')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="dashboard">
+            <i class="fa-solid fa-home mr-3 text-teal-500"></i> Dashboard
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('manualCutting')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="manualCutting">
+            <i class="fa-solid fa-scissors mr-3 text-sky-500"></i> Manual Cutting
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('timeTracking')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="timeTracking">
+            <i class="fa-solid fa-clock mr-3 text-orange-500"></i> Time Tracking
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('adminOps')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="adminOps">
+            <i class="fa-solid fa-cogs mr-3 text-purple-500"></i> Operations
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('report')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="report">
+            <i class="fa-solid fa-file-csv mr-3 text-cyan-600"></i> Report
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('staff')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="staff">
+            <i class="fa-solid fa-users mr-3 text-emerald-500"></i> Manage Staff
+          </button>
+        </li>
+        <li>
+          <button onclick="switchPage('masterData')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-teal-50 text-slate-700 font-bold transition menu-item" data-page="masterData">
+            <i class="fa-solid fa-database mr-3 text-rose-500"></i> Master data
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Header Top (Fixed) -->
+    <header class="header-top">
+      <div class="flex items-center justify-between">
+        <!-- Mobile: Hamburger + Logo -->
+        <div class="md:hidden flex items-center gap-3">
+          <button onclick="toggleSidebar()" class="hamburger-btn text-xl text-slate-700">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="flex items-center space-x-2">
+            <i id="mobileLogoIcon" class="fa-solid fa-spinner fa-spin text-xl text-teal-500"></i>
+          </div>
+        </div>
+
+        <!-- Desktop: Breadcrumb + User Name -->
+        <div class="hidden md:flex items-center gap-3 text-sm">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+              <i class="fa-solid fa-user-circle text-teal-600 text-lg"></i>
+            </div>
+            <span id="breadcrumbUserName" class="font-bold text-slate-700">-</span>
+          </div>
+          <i class="fa-solid fa-chevron-right text-slate-400"></i>
+          <span id="breadcrumbPage" class="text-slate-500">Dashboard</span>
+        </div>
+
+        <!-- Profile (Right) with User Name -->
+        <div class="relative flex items-center gap-2">
+          <span id="headerUserName" class="hidden md:inline text-sm font-bold text-slate-700">-</span>
+          <button onclick="toggleProfileMenu()" class="flex items-center gap-2 hover:opacity-70 transition">
+            <div id="headerAvatar" class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white overflow-hidden">
+              <i class="fa-solid fa-user text-lg"></i>
+            </div>
+            <i class="fa-solid fa-chevron-down text-slate-700 hidden md:inline"></i>
+          </button>
+
+          <!-- Profile Dropdown Card -->
+          <div id="profileMenu" class="profile-dropdown-menu hidden">
+            <div class="profile-header-card">
+              <div id="profileDropdownAvatar" class="profile-avatar">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div class="profile-info">
+                <div class="profile-info-name" id="profileCardName">-</div>
+                <div class="profile-info-email" id="profileCardEmail">-</div>
+              </div>
+            </div>
+
+            <button onclick="openMyProfile()" class="profile-menu-item w-full">
+              <i class="fa-solid fa-user"></i> Profile
+            </button>
+            <button onclick="switchPage('changePassword')" class="profile-menu-item w-full">
+              <i class="fa-solid fa-key"></i> Change Password
+            </button>
+            <button onclick="handleLogout()" class="profile-menu-item logout w-full">
+              <i class="fa-solid fa-sign-out-alt"></i> Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-layout main-content">
+
+      <!-- Toast Notification -->
+      <div id="toast" class="hidden fixed bottom-4 right-4 z-50 p-4 rounded-xl text-sm font-medium shadow-lg transition-all transform duration-300 flex items-center justify-between max-w-sm">
+        <div class="flex items-center space-x-2">
+          <i id="toastIcon" class="fa-solid"></i>
+          <span id="toastMessage"></span>
+        </div>
+        <button onclick="hideToast()" class="text-current opacity-70 hover:opacity-100"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- ==================== DASHBOARD PAGE (EMPTY) ==================== -->
+      <section id="dashboardPage" class="space-y-6">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-6 border-b pb-4 border-slate-200">
+            <div class="flex items-center space-x-3">
+              <i class="fa-solid fa-chart-line text-2xl text-teal-600"></i>
+              <h2 class="text-2xl font-extrabold text-slate-800">Dashboard</h2>
+            </div>
+            <button type="button" onclick="loadDashboardWidgets()" id="dashboardRefreshBtn" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-lg transition">
+              <i class="fa-solid fa-rotate mr-1"></i> Refresh
+            </button>
+          </div>
+
+          <!-- 1. Ringkasan Cepat -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-teal-50 rounded-xl p-4 border border-teal-200">
+              <p class="text-xs font-bold text-teal-600 uppercase">Sesi Hari Ini</p>
+              <p id="dashSesiHariIni" class="text-3xl font-extrabold text-teal-700 mt-2">-</p>
+              <p class="text-[11px] text-teal-600 mt-1">Personal + Group + Manual Group</p>
+            </div>
+            <div class="bg-sky-50 rounded-xl p-4 border border-sky-200">
+              <p class="text-xs font-bold text-sky-600 uppercase">Sesi Bulan Ini</p>
+              <p id="dashSesiBulanIni" class="text-3xl font-extrabold text-sky-700 mt-2">-</p>
+              <p class="text-[11px] text-sky-600 mt-1">Personal + Group + Manual Group</p>
+            </div>
+            <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
+              <p class="text-xs font-bold text-purple-600 uppercase">Sesi Minggu Ini</p>
+              <p id="dashSesiMingguIni" class="text-3xl font-extrabold text-purple-700 mt-2">-</p>
+              <p class="text-[11px] text-purple-600 mt-1">7 hari terakhir</p>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+              <p class="text-xs font-bold text-amber-600 uppercase">Approval Rate</p>
+              <p id="dashApprovalRate" class="text-3xl font-extrabold text-amber-700 mt-2">-</p>
+              <p id="dashApprovalRateSub" class="text-[11px] text-amber-600 mt-1">30 hari terakhir</p>
+            </div>
+          </div>
+
+          <!-- 2. Grafik Tren -->
+          <div class="mb-8">
+            <h3 class="font-bold text-lg text-slate-800 mb-4">Tren Sesi 7 Hari Terakhir</h3>
+            <div class="bg-slate-50 rounded-xl border border-slate-200 p-4">
+              <canvas id="dashTrendChart" height="90"></canvas>
+            </div>
+          </div>
+
+          <!-- 3. Leaderboard -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <h3 class="font-bold text-lg text-slate-800 mb-4"><i class="fa-solid fa-trophy text-yellow-500 mr-2"></i>Top Pengaju Form Hari Ini</h3>
+              <div id="dashTopStaffList" class="space-y-2">
+                <p class="text-sm text-slate-400">Memuat data...</p>
+              </div>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg text-slate-800 mb-4"><i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i>Reject Rate Tertinggi</h3>
+              <div id="dashTopRejectList" class="space-y-2">
+                <p class="text-sm text-slate-400">Memuat data...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Widget Operasional -->
+          <div>
+            <h3 class="font-bold text-lg text-slate-800 mb-4"><i class="fa-solid fa-hourglass-half text-orange-500 mr-2"></i>Antrian Terlama</h3>
+            <div id="dashAttentionList" class="space-y-2">
+              <p class="text-sm text-slate-400">Memuat data...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PT PORTAL PAGE ==================== -->
+      <section id="manualCuttingPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center space-x-3 mb-6 border-b pb-4 border-slate-200">
+            <i class="fa-solid fa-scissors text-2xl text-sky-600"></i>
+            <h2 class="text-2xl font-extrabold text-slate-800">Manual Cutting</h2>
+          </div>
+
+          <!-- Tab Navigation -->
+          <div class="flex border-b border-slate-200 mb-6">
+            <button onclick="switchManualCuttingTab('personal')" class="manual-cutting-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-teal-500 text-teal-700 hover:bg-slate-50 transition active" data-tab="personal">
+              <i class="fa-solid fa-user mr-2"></i> Personal Training
+            </button>
+            <button onclick="switchManualCuttingTab('group')" class="manual-cutting-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="group">
+              <i class="fa-solid fa-users mr-2"></i> Group Training
+            </button>
+            <button onclick="switchManualCuttingTab('manualgroup')" class="manual-cutting-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="manualgroup">
+              <i class="fa-solid fa-user-plus mr-2"></i> Add Manual Group
+            </button>
+          </div>
+
+          <!-- Personal Training Tab Content -->
+          <div id="personalTrainingTab" class="manual-cutting-tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Personal Training Form -->
+              <div class="md:col-span-1 bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-2 mb-4 border-b pb-3 border-slate-100">
+                  <i class="fa-solid fa-user text-sky-600"></i>
+                  <h3 class="font-extrabold text-slate-800">Personal Training Form</h3>
+                </div>
+
+                <form id="formPersonalTraining" onsubmit="submitPersonalTrainingForm(event)" class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+                    <select id="ptClub" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Club --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Personal Trainer</label>
+                    <input type="text" id="ptName" placeholder="Nama PT" required readonly class="w-full text-sm bg-slate-200 text-slate-600 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-not-allowed">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Member</label>
+                    <input type="text" id="ptMember" placeholder="Member (#1120)" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Session Type</label>
+                    <select id="ptSessionType" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Session Type --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Tanggal</label>
+                    <input type="date" id="ptSessionDate" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - Start</label>
+                    <input type="time" id="ptTimeStart" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - End</label>
+                    <input type="time" id="ptTimeEnd" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <button type="submit" id="ptSubmitFormBtn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md btn-press transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Kirim Form
+                  </button>
+                </form>
+              </div>
+
+              <!-- Exercise Log Container -->
+              <div class="md:col-span-2 bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between mb-4 border-b pb-3 border-slate-100">
+                  <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-dumbbell text-sky-600"></i>
+                    <h3 class="font-extrabold text-slate-800">Add Log Exercise</h3>
+                  </div>
+                  <button type="button" onclick="addExerciseForm()" class="text-sm bg-teal-500 hover:bg-teal-600 text-white font-bold py-1 px-3 rounded-lg transition">
+                    <i class="fa-solid fa-plus mr-1"></i> Add Exercise
+                  </button>
+                </div>
+
+                <div id="exerciseFormsContainer" class="space-y-4">
+                  <!-- Exercise 1 (default) -->
+                  <div class="exercise-form bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                      <label class="block text-xs font-bold text-slate-600">Exercise Name</label>
+                      <button type="button" onclick="removeExerciseForm(this)" class="text-xs text-red-500 hover:text-red-700 font-bold">
+                        <i class="fa-solid fa-trash mr-1"></i> Remove
+                      </button>
+                    </div>
+                    <input type="text" placeholder="Contoh: Bench Press" required class="w-full text-sm bg-white border border-slate-200 rounded-lg px-3 py-2 mb-4 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none exercise-name">
+
+                    <div class="grid grid-cols-5 gap-2 mb-3">
+                      <div class="text-center text-xs font-bold text-slate-600">Set 1</div>
+                      <div class="text-center text-xs font-bold text-slate-600">Set 2</div>
+                      <div class="text-center text-xs font-bold text-slate-600">Set 3</div>
+                      <div class="text-center text-xs font-bold text-slate-600">Set 4</div>
+                      <div class="text-center text-xs font-bold text-slate-600">Set 5</div>
+                    </div>
+
+                    <div class="space-y-2">
+                      <div>
+                        <label class="text-xs font-bold text-slate-600">Weight(Kg)</label>
+                        <div class="grid grid-cols-5 gap-2">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-weight">
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="text-xs font-bold text-slate-600">Repetition</label>
+                        <div class="grid grid-cols-5 gap-2">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                          <input type="number" placeholder="0" class="w-full text-sm bg-white border border-slate-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-sky-500 outline-none exercise-rep">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Group Training Tab Content -->
+          <div id="groupTrainingTab" class="manual-cutting-tab-content hidden">
+            <div class="flex justify-center">
+              <div class="w-full max-w-md bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-2 mb-4 border-b pb-3 border-slate-100">
+                  <i class="fa-solid fa-users text-sky-600"></i>
+                  <h3 class="font-extrabold text-slate-800">Group Training Form</h3>
+                </div>
+
+                <form id="formGroupTraining" onsubmit="submitGroupTrainingForm(event)" class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+                    <select id="gtClub" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Club --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Instruktur</label>
+                    <input type="text" id="gtInstruktur" placeholder="Nama Instruktur" required readonly class="w-full text-sm bg-slate-200 text-slate-600 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-not-allowed">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Member</label>
+                    <input type="text" id="gtMember" placeholder="Nama Member" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Session Type</label>
+                    <select id="gtSessionType" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Session Type --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Tanggal</label>
+                    <input type="date" id="gtSessionDate" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - Start</label>
+                    <input type="time" id="gtTimeStart" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - End</label>
+                    <input type="time" id="gtTimeEnd" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <button type="submit" id="gtSubmitFormBtn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md btn-press transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Kirim Form
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Manual Group Tab Content -->
+          <div id="manualgroupTab" class="manual-cutting-tab-content hidden">
+            <div class="flex justify-center">
+              <div class="w-full max-w-md bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-2 mb-4 border-b pb-3 border-slate-100">
+                  <i class="fa-solid fa-user-plus text-sky-600"></i>
+                  <h3 class="font-extrabold text-slate-800">Add Manual Group</h3>
+                </div>
+
+                <form id="formManualGroup" onsubmit="submitManualGroupForm(event)" class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+                    <select id="mgClub" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                      <option value="">-- Pilih Club --</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Instruktur</label>
+                    <input type="text" id="mgInstruktur" placeholder="Nama Instruktur" required readonly class="w-full text-sm bg-slate-200 text-slate-600 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-not-allowed">
+                  </div>
+
+                  <div>
+                    <div class="flex items-center justify-between mb-1">
+                      <label class="block text-xs font-bold text-slate-600">Member</label>
+                      <button type="button" onclick="addMGMemberField()" class="text-xs text-teal-600 hover:text-teal-700 font-bold">
+                        <i class="fa-solid fa-plus mr-1"></i> Add Member
+                      </button>
+                    </div>
+                    <div id="mgMemberFieldsContainer" class="space-y-2">
+                      <!-- Member fields populated via JS -->
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Schedule - Tanggal</label>
+                    <input type="date" id="mgScheduleDate" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Schedule - Jam</label>
+                    <input type="time" id="mgScheduleTime" value="00:00" required class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none">
+                  </div>
+
+                  <button type="submit" id="mgSubmitFormBtn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md btn-press transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Kirim Form
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TIME TRACKING PAGE ==================== -->
+      <section id="timeTrackingPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center space-x-3 mb-6 border-b pb-4 border-slate-200">
+            <i class="fa-solid fa-clock text-2xl text-orange-600"></i>
+            <h2 class="text-2xl font-extrabold text-slate-800">Time Tracking</h2>
+          </div>
+
+          <!-- Time Clock Card -->
+          <div class="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl p-6 mb-6 border border-teal-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Personal Trainer</label>
+                <input type="text" id="tioPTName" placeholder="Nama PT" required readonly class="w-full text-sm bg-slate-200 text-slate-600 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-not-allowed">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Member</label>
+                <input type="text" id="tioMember" placeholder="Nama Member" required class="w-full text-sm bg-white border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-teal-500 outline-none">
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <button onclick="handleTimeClock('Time In')" id="timeClockInBtn" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2.5 px-5 rounded-xl transition btn-press">
+                <i class="fa-solid fa-right-to-bracket mr-2"></i> Time In
+              </button>
+              <button onclick="handleTimeClock('Time Out')" id="timeClockOutBtn" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2.5 px-5 rounded-xl transition btn-press">
+                <i class="fa-solid fa-right-from-bracket mr-2"></i> Time Out
+              </button>
+            </div>
+          </div>
+
+          <!-- Time In/Out History -->
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <div class="flex items-center justify-between mb-4 border-b pb-3 border-slate-100">
+              <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-history text-orange-600"></i>
+                <h3 class="font-extrabold text-slate-800">Time In/Out History</h3>
+              </div>
+              <button onclick="loadTimeInOutHistory()" class="text-xs text-orange-600 font-semibold hover:underline">
+                <i class="fa-solid fa-rotate-right mr-1"></i> Refresh
+              </button>
+            </div>
+
+            <div id="timeHistoryContainer" class="space-y-2 max-h-96 overflow-y-auto">
+              <p class="text-center text-slate-400 py-4">
+                <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat riwayat...
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== ADMIN OPS PAGE ==================== -->
+      <section id="adminOpsPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center space-x-3 mb-6 border-b pb-4 border-slate-200">
+            <i class="fa-solid fa-cogs text-2xl text-purple-600"></i>
+            <h2 class="text-2xl font-extrabold text-slate-800">Admin Operations</h2>
+          </div>
+
+          <!-- Dashboard Stats -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-yellow-50 rounded-xl p-4 border border-yellow-200">
+              <p class="text-xs font-bold text-yellow-600 uppercase">Total Pending</p>
+              <p id="statPending" class="text-3xl font-extrabold text-yellow-700 mt-2">0</p>
+            </div>
+            <div class="bg-green-50 rounded-xl p-4 border border-green-200">
+              <p class="text-xs font-bold text-green-600 uppercase">Approved Today</p>
+              <p id="statApprovedToday" class="text-3xl font-extrabold text-green-700 mt-2">0</p>
+            </div>
+            <div class="bg-red-50 rounded-xl p-4 border border-red-200">
+              <p class="text-xs font-bold text-red-600 uppercase">Rejected Today</p>
+              <p id="statRejectedToday" class="text-3xl font-extrabold text-red-700 mt-2">0</p>
+            </div>
+            <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+              <p class="text-xs font-bold text-blue-600 uppercase">Total Staff Aktif</p>
+              <p id="statActiveStaff" class="text-3xl font-extrabold text-blue-700 mt-2">0</p>
+            </div>
+          </div>
+
+          <!-- Pending Approvals (Tabs, each with its own Recent Activity) -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+            <h3 class="font-bold text-lg text-slate-800">Approvals</h3>
+            <button type="button" onclick="refreshAdminOpsData()" id="approvalRefreshBtn" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-lg transition">
+              <i class="fa-solid fa-rotate mr-1"></i> Refresh
+            </button>
+          </div>
+
+          <div class="flex border-b border-slate-200 mb-4 overflow-x-auto">
+            <button onclick="switchApprovalTab('PT')" class="approval-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-teal-500 text-teal-700 hover:bg-slate-50 transition whitespace-nowrap" data-approval-tab="PT">
+              <i class="fa-solid fa-user mr-2"></i> Personal Training
+              <span id="approvalBadge-PT" class="ml-2 inline-block min-w-[1.25rem] px-1.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800">0</span>
+            </button>
+            <button onclick="switchApprovalTab('GROUP')" class="approval-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition whitespace-nowrap" data-approval-tab="GROUP">
+              <i class="fa-solid fa-users mr-2"></i> Group
+              <span id="approvalBadge-GROUP" class="ml-2 inline-block min-w-[1.25rem] px-1.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800">0</span>
+            </button>
+            <button onclick="switchApprovalTab('TIO')" class="approval-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition whitespace-nowrap" data-approval-tab="TIO">
+              <i class="fa-solid fa-clock mr-2"></i> Time In/Out
+              <span id="approvalBadge-TIO" class="ml-2 inline-block min-w-[1.25rem] px-1.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800">0</span>
+            </button>
+          </div>
+
+          <div class="flex flex-col md:flex-row gap-3 mb-4">
+            <input type="text" id="approvalSearchInput" placeholder="Cari nama staff atau member..." oninput="renderApprovalTable(); renderRecentTable();" class="flex-1 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+            <select id="approvalStatusFilter" onchange="renderApprovalTable()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+              <option value="Pending" selected>Pending</option>
+              <option value="Success">Success</option>
+              <option value="Rejected">Rejected</option>
+              <option value="all">All Status</option>
+            </select>
+          </div>
+
+          <!-- Pending Approvals Table (isi & kolom mengikuti tab aktif) -->
+          <div class="mb-8">
+            <h4 id="approvalTableTitle" class="font-bold text-slate-700 mb-3">Pending Approvals - Personal Training</h4>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead id="approvalTableHead" class="bg-slate-100"></thead>
+                <tbody id="approvalTableBody">
+                  <tr>
+                    <td colspan="7" class="px-4 py-4 text-center text-slate-400">
+                      <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Recent Activity Table (20 record terakhir per tab aktif, sudah diproses) -->
+          <div>
+            <h4 id="recentTableTitle" class="font-bold text-slate-700 mb-3">Recent Activity - Personal Training</h4>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="bg-slate-100">
+                  <tr>
+                    <th class="px-4 py-2 text-left font-bold text-slate-700">Waktu Diproses</th>
+                    <th class="px-4 py-2 text-left font-bold text-slate-700">Staff</th>
+                    <th class="px-4 py-2 text-left font-bold text-slate-700">Member</th>
+                    <th class="px-4 py-2 text-left font-bold text-slate-700">Status</th>
+                    <th class="px-4 py-2 text-left font-bold text-slate-700">Admin Notes</th>
+                  </tr>
+                </thead>
+                <tbody id="recentTableBody">
+                  <tr>
+                    <td colspan="5" class="px-4 py-4 text-center text-slate-400">
+                      <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== REPORT PAGE ==================== -->
+      <section id="reportPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-6 border-b pb-4 border-slate-200">
+            <div class="flex items-center space-x-3">
+              <i class="fa-solid fa-file-csv text-2xl text-cyan-600"></i>
+              <h2 class="text-2xl font-extrabold text-slate-800">Report</h2>
+            </div>
+          </div>
+
+          <div class="flex border-b border-slate-200 mb-4 overflow-x-auto">
+            <button onclick="switchReportTab('PT')" class="report-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-teal-500 text-teal-700 hover:bg-slate-50 transition whitespace-nowrap" data-report-tab="PT">
+              <i class="fa-solid fa-user mr-2"></i> Personal Training
+            </button>
+            <button onclick="switchReportTab('GT')" class="report-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition whitespace-nowrap" data-report-tab="GT">
+              <i class="fa-solid fa-people-group mr-2"></i> Group Training
+            </button>
+            <button onclick="switchReportTab('MG')" class="report-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition whitespace-nowrap" data-report-tab="MG">
+              <i class="fa-solid fa-users mr-2"></i> Manual Group
+            </button>
+            <button onclick="switchReportTab('TIO')" class="report-tab flex-1 px-4 py-3 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition whitespace-nowrap" data-report-tab="TIO">
+              <i class="fa-solid fa-clock mr-2"></i> Time In/Out
+            </button>
+          </div>
+
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+            <div class="flex flex-wrap gap-3 items-center">
+              <input type="text" id="reportSearchStaff" placeholder="Cari nama staff..." oninput="renderReportTable()" class="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+              <select id="reportDateFilter" onchange="handleReportDateFilterChange()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                <option value="all" selected>All Dates</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="thisMonth">This Month</option>
+                <option value="lastMonth">Last Month</option>
+                <option value="custom">Custom Range</option>
+              </select>
+              <div id="reportCustomDateRange" class="hidden flex gap-2 items-center">
+                <input type="date" id="reportDateFrom" onchange="renderReportTable()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                <span class="text-slate-400 text-sm">-</span>
+                <input type="date" id="reportDateTo" onchange="renderReportTable()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+              </div>
+
+              <!-- Filter Status (multi-select via checkbox dropdown) -->
+              <div class="relative">
+                <button type="button" onclick="toggleReportStatusDropdown()" id="reportStatusFilterBtn" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none flex items-center gap-2">
+                  <span id="reportStatusFilterLabel">All Status</span>
+                  <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                </button>
+                <div id="reportStatusDropdown" class="hidden absolute z-20 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg p-3 space-y-2 w-40">
+                  <label class="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" class="report-status-checkbox" value="Pending" checked onchange="handleReportStatusFilterChange()"> Pending
+                  </label>
+                  <label class="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" class="report-status-checkbox" value="Success" checked onchange="handleReportStatusFilterChange()"> Success
+                  </label>
+                  <label class="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" class="report-status-checkbox" value="Rejected" checked onchange="handleReportStatusFilterChange()"> Rejected
+                  </label>
+                </div>
+              </div>
+
+              <span id="reportRecordCount" class="text-sm text-slate-500">Showing 0 records</span>
+            </div>
+            <button type="button" onclick="exportReportCsv()" id="reportExportBtn" class="text-sm bg-teal-500 hover:bg-teal-600 text-white font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
+              <i class="fa-solid fa-file-export mr-2"></i> Export CSV
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead id="reportTableHead" class="bg-slate-100"></thead>
+              <tbody id="reportTableBody">
+                <tr>
+                  <td colspan="10" class="px-4 py-4 text-center text-slate-400">
+                    <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PROFILE PAGE (BLANK) ==================== -->
+      <section id="profilePage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 text-center">
+          <i class="fa-solid fa-user-circle text-6xl text-slate-300 mb-4"></i>
+          <h2 class="text-2xl font-extrabold text-slate-700 mb-2">Profile</h2>
+          <p class="text-slate-500">Halaman profile sedang dalam pengembangan</p>
+        </div>
+      </section>
+
+      <!-- ==================== CHANGE PASSWORD PAGE ==================== -->
+      <section id="changePasswordPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 max-w-md mx-auto">
+          <div class="text-center mb-6">
+            <i class="fa-solid fa-key text-4xl text-teal-500 mb-3"></i>
+            <h2 class="text-2xl font-extrabold text-slate-700">Change Password</h2>
+          </div>
+
+          <form id="changePasswordForm" onsubmit="submitChangePassword(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Current Password</label>
+              <input type="password" id="currentPasswordInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">New Password</label>
+              <input type="password" id="newPasswordInput" required minlength="6" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+              <p class="text-xs text-slate-500 mt-1">Minimal 6 karakter</p>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Confirm New Password</label>
+              <input type="password" id="confirmPasswordInput" required minlength="6" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+            </div>
+            <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2.5 rounded-lg transition">
+              Update Password
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ==================== STAFF PAGE ==================== -->
+      <section id="staffPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 border-b pb-4 border-slate-200 gap-4">
+            <div class="flex items-center space-x-3">
+              <i class="fa-solid fa-users text-2xl text-emerald-600"></i>
+              <h2 class="text-2xl font-extrabold text-slate-800">Staff</h2>
+            </div>
+            <button onclick="openUserModal()" id="staffAddBtn" class="w-full md:w-auto bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-plus"></i> Add Staff
+            </button>
+          </div>
+
+          <!-- Search & Filter -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="relative">
+              <input type="text" id="staffSearch" placeholder="Search by name..." class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" onkeyup="filterStaffTable()">
+              <i class="fa-solid fa-search absolute right-3 top-2.5 text-slate-400"></i>
+            </div>
+            <select id="staffStatusFilter" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" onchange="loadStaffListByStatus()">
+              <option value="active">Active Staff</option>
+              <option value="archived">Archived Staff</option>
+            </select>
+            <select id="roleFilter" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" onchange="filterStaffTable()">
+              <option value="">-- All Roles --</option>
+            </select>
+            <select id="clubFilter" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" onchange="filterStaffTable()">
+              <option value="">-- All Clubs --</option>
+            </select>
+          </div>
+
+          <!-- Staff Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-slate-100">
+                <tr>
+                  <th class="px-4 py-2 text-left font-bold text-slate-700">User ID</th>
+                  <th class="px-4 py-2 text-left font-bold text-slate-700">Name</th>
+                  <th class="px-4 py-2 text-left font-bold text-slate-700">Role</th>
+                  <th class="px-4 py-2 text-left font-bold text-slate-700">Club</th>
+                  <th class="px-4 py-2 text-left font-bold text-slate-700">Email</th>
+                  <th class="px-4 py-2 text-left font-bold text-slate-700">Phone</th>
+                  <th class="px-4 py-2 text-center font-bold text-slate-700">Action</th>
+                </tr>
+              </thead>
+              <tbody id="staffTableBody">
+                <tr>
+                  <td colspan="7" class="px-4 py-4 text-center text-slate-400">
+                    <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat staff...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="staffDetailPage" class="hidden">
+        <div class="flex flex-col md:flex-row gap-6">
+          <!-- Left Sidebar - Staff Profile -->
+          <div class="w-full md:w-80 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 h-fit">
+            <div class="text-center mb-6">
+              <div id="detailStaffAvatar" class="w-20 h-20 rounded-full bg-teal-500 flex items-center justify-center text-white text-4xl mx-auto mb-4 overflow-hidden">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <h2 id="detailStaffName" class="text-2xl font-bold text-slate-800">-</h2>
+              <p id="detailStaffRole" class="text-sm text-slate-500 mt-1">-</p>
+            </div>
+
+            <div class="space-y-4 border-t pt-4">
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase mb-1">Staff ID</p>
+                <p id="detailStaffId" class="text-slate-800 font-semibold">-</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase mb-1">Email</p>
+                <p id="detailStaffEmail" class="text-slate-800 break-all">-</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase mb-1">Phone</p>
+                <p id="detailStaffPhone" class="text-slate-800">-</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase mb-1">Club</p>
+                <p id="detailStaffClub" class="text-slate-800">-</p>
+              </div>
+            </div>
+
+            <div class="flex gap-3 mt-6 border-t pt-4">
+              <button onclick="editStaffDetail()" id="staffDetailEditBtn" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition text-sm">
+                <i class="fa-solid fa-pen-to-square mr-2"></i> Edit
+              </button>
+              <button onclick="goBackToStaff()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition text-sm">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Back
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Main Area - Tabs Content -->
+          <div class="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100">
+            <!-- Tab Navigation -->
+            <div class="flex border-b border-slate-200">
+              <button onclick="switchDetailTab('activities')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="activities">
+                <i class="fa-solid fa-history mr-2"></i> Activities
+              </button>
+              <button onclick="switchDetailTab('personaltraining')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="personaltraining">
+                <i class="fa-solid fa-scissors mr-2"></i> Personal Training
+              </button>
+              <button onclick="switchDetailTab('grouptraining')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition hidden" data-tab="grouptraining">
+                <i class="fa-solid fa-users mr-2"></i> Group Training
+              </button>
+              <button onclick="switchDetailTab('manualgroupDetail')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition hidden" data-tab="manualgroupDetail">
+                <i class="fa-solid fa-user-plus mr-2"></i> Manual Group
+              </button>
+              <button onclick="switchDetailTab('timeinout')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="timeinout">
+                <i class="fa-solid fa-clock mr-2"></i> Time In/Out
+              </button>
+            </div>
+
+            <div class="p-6">
+              <!-- Activities Tab -->
+              <div id="activitiesTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-4">Recent Activities</h3>
+                <div id="activitiesListContainer" class="space-y-3">
+                  <p class="text-center text-slate-400 py-8"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...</p>
+                </div>
+              </div>
+
+              <!-- Personal Training Tab -->
+              <div id="personaltrainingTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-6">Personal Training Records</h3>
+                
+                <!-- Filter & Sort -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                  <div class="text-sm text-slate-600">
+                    <span id="ptRecordCount">Showing 0 records</span>
+                  </div>
+                  <div class="flex flex-wrap gap-3 items-center">
+                    <select id="ptStatusFilter" onchange="loadPersonalTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="active" selected>Active</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                    <select id="ptDateFilter" onchange="handlePTDateFilterChange()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="all" selected>All Dates</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisMonth">This Month</option>
+                      <option value="lastMonth">Last Month</option>
+                      <option value="custom">Custom Range</option>
+                    </select>
+                    <div id="ptCustomDateRange" class="hidden flex gap-2 items-center">
+                      <input type="date" id="ptDateFrom" onchange="loadPersonalTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <span class="text-slate-400 text-sm">-</span>
+                      <input type="date" id="ptDateTo" onchange="loadPersonalTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                    </div>
+                    <select id="ptSortOrder" onchange="loadPersonalTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="oldest" selected>Sort: Oldest First</option>
+                      <option value="newest">Sort: Newest First</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto bg-white rounded-xl border border-slate-200">
+                  <table class="w-full text-sm">
+                    <thead class="bg-slate-100">
+                      <tr>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">No</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">ID</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Tanggal</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Member</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Club</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Session Type</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Booking Time Start</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Booking Time End</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Status</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ptRecordsTableBody">
+                      <tr>
+                        <td colspan="10" class="px-4 py-4 text-center text-slate-400">
+                          <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="ptPaginationContainer" class="flex justify-center gap-2 mt-6 hidden">
+                  <button onclick="previousPTPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">← Prev</button>
+                  <div id="ptPageButtons" class="flex gap-1"></div>
+                  <button onclick="nextPTPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">Next →</button>
+                </div>
+              </div>
+
+              <!-- Group Training Tab -->
+              <div id="grouptrainingTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-6">Group Training Records</h3>
+
+                <!-- Filter & Sort -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                  <div class="text-sm text-slate-600">
+                    <span id="gtRecordCount">Showing 0 records</span>
+                  </div>
+                  <div class="flex flex-wrap gap-3 items-center">
+                    <select id="gtStatusFilter" onchange="loadGroupTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="active" selected>Active</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                    <select id="gtDateFilter" onchange="handleGTDateFilterChange()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="all" selected>All Dates</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisMonth">This Month</option>
+                      <option value="lastMonth">Last Month</option>
+                      <option value="custom">Custom Range</option>
+                    </select>
+                    <div id="gtCustomDateRange" class="hidden flex gap-2 items-center">
+                      <input type="date" id="gtDateFrom" onchange="loadGroupTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <span class="text-slate-400 text-sm">-</span>
+                      <input type="date" id="gtDateTo" onchange="loadGroupTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                    </div>
+                    <select id="gtSortOrder" onchange="loadGroupTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="oldest" selected>Sort: Oldest First</option>
+                      <option value="newest">Sort: Newest First</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto bg-white rounded-xl border border-slate-200">
+                  <table class="w-full text-sm">
+                    <thead class="bg-slate-100">
+                      <tr>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">No</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">ID</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Tanggal</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Member</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Club</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Session Type</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Booking Time Start</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Booking Time End</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Status</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="gtRecordsTableBody">
+                      <tr>
+                        <td colspan="10" class="px-4 py-4 text-center text-slate-400">
+                          <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="gtPaginationContainer" class="flex justify-center gap-2 mt-6 hidden">
+                  <button onclick="previousGTPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">← Prev</button>
+                  <div id="gtPageButtons" class="flex gap-1"></div>
+                  <button onclick="nextGTPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">Next →</button>
+                </div>
+              </div>
+
+              <!-- Manual Group Tab -->
+              <div id="manualgroupDetailTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-6">Manual Group Records</h3>
+
+                <!-- Filter & Sort -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                  <div class="text-sm text-slate-600">
+                    <span id="mgRecordCount">Showing 0 records</span>
+                  </div>
+                  <div class="flex flex-wrap gap-3 items-center">
+                    <select id="mgStatusFilter" onchange="loadManualGroupHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="active" selected>Active</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                    <select id="mgDateFilter" onchange="handleMGDateFilterChange()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="all" selected>All Dates</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisMonth">This Month</option>
+                      <option value="lastMonth">Last Month</option>
+                      <option value="custom">Custom Range</option>
+                    </select>
+                    <div id="mgCustomDateRange" class="hidden flex gap-2 items-center">
+                      <input type="date" id="mgDateFrom" onchange="loadManualGroupHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <span class="text-slate-400 text-sm">-</span>
+                      <input type="date" id="mgDateTo" onchange="loadManualGroupHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                    </div>
+                    <select id="mgSortOrder" onchange="loadManualGroupHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="oldest" selected>Sort: Oldest First</option>
+                      <option value="newest">Sort: Newest First</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto bg-white rounded-xl border border-slate-200">
+                  <table class="w-full text-sm">
+                    <thead class="bg-slate-100">
+                      <tr>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">No</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">ID</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Schedule</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Member</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Club</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Status</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="mgRecordsTableBody">
+                      <tr>
+                        <td colspan="7" class="px-4 py-4 text-center text-slate-400">
+                          <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="mgPaginationContainer" class="flex justify-center gap-2 mt-6 hidden">
+                  <button onclick="previousMGPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">← Prev</button>
+                  <div id="mgPageButtons" class="flex gap-1"></div>
+                  <button onclick="nextMGPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">Next →</button>
+                </div>
+              </div>
+
+              <!-- Time In/Out Tab -->
+              <div id="timeinoutTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-6">Time In/Out Records</h3>
+
+                <!-- Filter & Sort -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                  <div class="text-sm text-slate-600">
+                    <span id="tioRecordCount">Showing 0 records</span>
+                  </div>
+                  <div class="flex flex-wrap gap-3 items-center">
+                    <select id="tioStatusFilter" onchange="loadTioHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="active" selected>Active</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                    <select id="tioSortOrder" onchange="loadTioHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="oldest" selected>Sort: Oldest First</option>
+                      <option value="newest">Sort: Newest First</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto bg-white rounded-xl border border-slate-200">
+                  <table class="w-full text-sm">
+                    <thead class="bg-slate-100">
+                      <tr>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">No</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">ID</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Member</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Time</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Status</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tioRecordsTableBody">
+                      <tr>
+                        <td colspan="6" class="px-4 py-4 text-center text-slate-400">
+                          <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="tioPaginationContainer" class="flex justify-center gap-2 mt-6 hidden">
+                  <button onclick="previousTioPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">← Prev</button>
+                  <div id="tioPageButtons" class="flex gap-1"></div>
+                  <button onclick="nextTioPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">Next →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="masterDataPage" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100">
+          <!-- Tab Navigation -->
+          <div class="flex border-b border-slate-200">
+            <button onclick="switchMasterDataTab('role')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition active" data-tab="role">
+              <i class="fa-solid fa-shield mr-2"></i> Role
+            </button>
+            <button onclick="switchMasterDataTab('permission')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="permission">
+              <i class="fa-solid fa-lock mr-2"></i> Permission
+            </button>
+            <button onclick="switchMasterDataTab('club')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="club">
+              <i class="fa-solid fa-building mr-2"></i> Club
+            </button>
+            <button onclick="switchMasterDataTab('sessiontype')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="sessiontype">
+              <i class="fa-solid fa-list mr-2"></i> Session Type
+            </button>
+            <button onclick="switchMasterDataTab('masterAuditLog')" class="master-data-tab flex-1 px-6 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="masterAuditLog">
+              <i class="fa-solid fa-clipboard-list mr-2"></i> Audit Log
+            </button>
+          </div>
+
+          <div class="p-6">
+            <!-- ROLE TAB -->
+            <div id="roleTab" class="master-data-content">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+                <h3 class="font-bold text-lg text-slate-800">Manage Roles</h3>
+                <button onclick="openRoleModal()" id="masterAddRoleBtn" class="w-full md:w-auto bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-plus"></i> Add Role
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Role ID</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Role Name</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Description</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="roleTableBody">
+                    <tr>
+                      <td colspan="4" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat roles...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- PERMISSION TAB -->
+            <div id="permissionTab" class="master-data-content hidden">
+              <h3 class="font-bold text-lg text-slate-800 mb-4">Permission</h3>
+
+              <div class="mb-4 max-w-xs">
+                <label for="permissionRoleSelect" class="block text-xs font-bold text-slate-500 uppercase mb-1">Pilih Role</label>
+                <select id="permissionRoleSelect" onchange="loadPermissionMatrix()" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                  <option value="">Memuat role...</option>
+                </select>
+              </div>
+
+              <div id="permissionSuperAdminNote" class="hidden mb-4 text-sm bg-amber-50 border border-amber-200 text-amber-700 rounded-lg px-4 py-3">
+                <i class="fa-solid fa-circle-info mr-2"></i> Super Admin selalu punya akses penuh ke semua module dan tidak bisa diubah.
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Module</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">View</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Add</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Edit</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Delete</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Export</th>
+                    </tr>
+                  </thead>
+                  <tbody id="permissionTableBody">
+                    <tr>
+                      <td colspan="6" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-6 flex justify-end">
+                <button type="button" onclick="savePermissionMatrix()" id="permissionSaveBtn" class="bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-2 rounded-lg transition">
+                  <i class="fa-solid fa-floppy-disk mr-2"></i> Save Changes
+                </button>
+              </div>
+            </div>
+
+            <!-- CLUB TAB -->
+            <div id="clubTab" class="master-data-content hidden">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+                <h3 class="font-bold text-lg text-slate-800">Manage Clubs</h3>
+                <button onclick="openClubModal()" id="masterAddClubBtn" class="w-full md:w-auto bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-plus"></i> Add Club
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Club ID</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Club Name</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Location</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="clubTableBody">
+                    <tr>
+                      <td colspan="4" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat clubs...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- SESSION TYPE TAB -->
+            <div id="sessiontypeTab" class="master-data-content hidden">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+                <h3 class="font-bold text-lg text-slate-800">Manage Session Types</h3>
+                <button onclick="openSessionTypeModal()" id="masterAddSessionTypeBtn" class="w-full md:w-auto bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-plus"></i> Add Session Type
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Session Type ID</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Session Name</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Description</th>
+                      <th class="px-4 py-2 text-center font-bold text-slate-700">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sessiontypeTableBody">
+                    <tr>
+                      <td colspan="4" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat session types...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="masterAuditLogTab" class="master-data-content hidden">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+                <h3 class="font-bold text-lg text-slate-800">Audit Log</h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Timestamp</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">User</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Action</th>
+                      <th class="px-4 py-2 text-left font-bold text-slate-700">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody id="masterAuditLogTableBody">
+                    <tr>
+                      <td colspan="4" class="px-4 py-4 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat audit log...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==================== MODAL USER FORM ==================== -->
+  <div id="userModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="userModalTitle" class="text-xl font-extrabold text-slate-800">Add User</h3>
+        <button onclick="closeUserModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="submitUserForm(event)" class="space-y-4">
+        <input type="hidden" id="userIdInput">
+        <input type="hidden" id="userPhotoUrlInput">
+
+        <div class="flex flex-col items-center mb-2">
+          <div id="userPhotoPreview" class="w-20 h-20 rounded-full bg-teal-500 flex items-center justify-center text-white text-3xl mb-2 overflow-hidden">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <input type="file" id="userPhotoInput" accept="image/*" onchange="handleUserPhotoSelect(event)" class="hidden">
+          <button type="button" onclick="document.getElementById('userPhotoInput').click()" class="text-xs text-teal-600 hover:text-teal-700 font-bold">
+            <i class="fa-solid fa-camera mr-1"></i> Ganti Foto
+          </button>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Name</label>
+          <input type="text" id="userNameInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Email</label>
+          <input type="email" id="userEmailInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Phone</label>
+          <input type="tel" id="userPhoneInput" placeholder="08xxxxxxxxxx" pattern="[0-9]*" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+          <p class="text-xs text-slate-500 mt-1">Angka saja (opsional)</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Role</label>
+          <select id="userRoleInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+            <option value="">-- Select Role --</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+          <select id="userClubInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+            <option value="">-- Select Club --</option>
+          </select>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-lg transition">
+            Save
+          </button>
+          <button type="button" onclick="closeUserModal()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL ROLE FORM ==================== -->
+  <div id="roleModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="roleModalTitle" class="text-xl font-extrabold text-slate-800">Add Role</h3>
+        <button onclick="closeRoleModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="submitRoleForm(event)" class="space-y-4">
+        <input type="hidden" id="roleIdInput">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Role Name</label>
+          <input type="text" id="roleNameInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Description</label>
+          <textarea id="roleDescriptionInput" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none resize-none"></textarea>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-lg transition">
+            Save
+          </button>
+          <button type="button" onclick="closeRoleModal()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL CLUB FORM ==================== -->
+  <div id="clubModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="clubModalTitle" class="text-xl font-extrabold text-slate-800">Add Club</h3>
+        <button onclick="closeClubModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="submitClubForm(event)" class="space-y-4">
+        <input type="hidden" id="clubIdInput">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Club Name</label>
+          <input type="text" id="clubNameInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Location</label>
+          <input type="text" id="clubLocationInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-lg transition">
+            Save
+          </button>
+          <button type="button" onclick="closeClubModal()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Session Type Modal -->
+  <div id="sessiontypeModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="sessiontypeModalTitle" class="text-xl font-extrabold text-slate-800">Add Session Type</h3>
+        <button onclick="closeSessionTypeModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="submitSessionTypeForm(event)" class="space-y-4">
+        <input type="hidden" id="sessiontypeIdInput">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Session Name</label>
+          <input type="text" id="sessiontypeNameInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Description</label>
+          <textarea id="sessiontypeDescInput" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none"></textarea>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-lg transition">
+            Save
+          </button>
+          <button type="button" onclick="closeSessionTypeModal()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Personal Training Detail Modal -->
+  <div id="ptDetailModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl p-6 max-w-2xl w-full my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-extrabold text-slate-800">Personal Training Detail</h3>
+        <button onclick="closePTDetailModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-5 mb-6">
+        <!-- Header Info: ID and Created Date -->
+        <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">ID</p>
+            <p id="ptDetailID" class="text-base text-slate-900 font-bold">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Created Date</p>
+            <p id="ptDetailCreatedDate" class="text-sm text-slate-900 font-bold">-</p>
+          </div>
+        </div>
+
+        <!-- Main Info: Club, Session Type, Member, Tanggal -->
+        <div class="border-t pt-5">
+          <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Club</p>
+              <p id="ptDetailClub" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Session Type</p>
+              <p id="ptDetailSessionType" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Member</p>
+              <p id="ptDetailMember" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tanggal</p>
+              <p id="ptDetailTanggal" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Trainer & Booking Time -->
+        <div class="border-t pt-5">
+          <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Personal Trainer</p>
+              <p id="ptDetailPTName" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Booking Time</p>
+              <p id="ptDetailBookingTime" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exercise Log -->
+        <div class="border-t pt-5">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Exercise Log</p>
+          <div id="ptDetailExerciseLog" class="bg-slate-50 p-3 rounded-lg text-sm text-slate-700 whitespace-pre-wrap max-h-40 overflow-y-auto">
+            -
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="border-t pt-5">
+          <div class="mb-4">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Status</p>
+            <p id="ptDetailStatus" class="text-lg font-bold text-slate-900">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Notes</p>
+            <p id="ptDetailAdminNotes" class="text-sm text-slate-900 font-semibold">-</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="button" onclick="editPTFromDetail()" id="ptDetailEditBtn" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-pen-to-square mr-2"></i> Edit
+        </button>
+        <button type="button" id="ptDetailArchiveBtn" onclick="deletePTFromDetail()" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-trash mr-2"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Personal Training Edit Modal -->
+  <div id="ptEditModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl p-6 max-w-2xl w-full my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-extrabold text-slate-800">Edit Personal Training</h3>
+        <button onclick="closePTEditModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="ptEditForm" onsubmit="submitPTEditForm(event)" class="space-y-4">
+        <input type="hidden" id="ptEditLogId">
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+            <select id="ptEditClub" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+              <option value="">-- Pilih Club --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Session Type</label>
+            <select id="ptEditSessionType" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+              <option value="">-- Pilih Session Type --</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Member</label>
+          <input type="text" id="ptEditMember" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tanggal</label>
+          <input type="date" id="ptEditTanggal" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - Start</label>
+            <input type="time" id="ptEditTimeStart" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - End</label>
+            <input type="time" id="ptEditTimeEnd" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+          </div>
+        </div>
+
+        <div class="border-t pt-4">
+          <div class="flex justify-between items-center mb-3">
+            <label class="block text-xs font-bold text-slate-600">Exercise Log</label>
+            <button type="button" onclick="addEditExerciseForm()" class="text-xs bg-teal-500 hover:bg-teal-600 text-white font-bold py-1 px-2 rounded">
+              + Add Exercise
+            </button>
+          </div>
+          <div id="ptEditExerciseContainer" class="space-y-4 max-h-72 overflow-y-auto">
+            <!-- Exercise forms will be added here (populated from existing data) -->
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" id="ptEditSubmitBtn" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-lg transition">
+            Save Changes
+          </button>
+          <button type="button" id="ptEditCloseBtn" onclick="closePTEditModal()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Group Training Detail Modal -->
+  <div id="gtDetailModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl p-6 max-w-2xl w-full my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-extrabold text-slate-800">Group Training Detail</h3>
+        <button onclick="closeGTDetailModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-5 mb-6">
+        <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">ID</p>
+            <p id="gtDetailID" class="text-base text-slate-900 font-bold">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Created Date</p>
+            <p id="gtDetailCreatedDate" class="text-sm text-slate-900 font-bold">-</p>
+          </div>
+        </div>
+
+        <div class="border-t pt-5">
+          <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Club</p>
+              <p id="gtDetailClub" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Session Type</p>
+              <p id="gtDetailSessionType" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Member</p>
+              <p id="gtDetailMember" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tanggal</p>
+              <p id="gtDetailTanggal" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t pt-5">
+          <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Instruktur</p>
+              <p id="gtDetailInstruktur" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Booking Time</p>
+              <p id="gtDetailBookingTime" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t pt-5">
+          <div class="mb-4">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Status</p>
+            <p id="gtDetailStatus" class="text-lg font-bold text-slate-900">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Notes</p>
+            <p id="gtDetailAdminNotes" class="text-sm text-slate-900 font-semibold">-</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="button" onclick="editGTFromDetail()" id="gtDetailEditBtn" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-pen-to-square mr-2"></i> Edit
+        </button>
+        <button type="button" onclick="deleteGTFromDetail()" id="gtDetailArchiveBtn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-trash mr-2"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group Training Edit Modal -->
+  <div id="gtEditModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl p-6 max-w-2xl w-full my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-extrabold text-slate-800">Edit Group Training</h3>
+        <button onclick="closeGTEditModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="gtEditForm" onsubmit="submitGTEditForm(event)" class="space-y-4">
+        <input type="hidden" id="gtEditLogId">
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+            <select id="gtEditClub" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+              <option value="">-- Pilih Club --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Session Type</label>
+            <select id="gtEditSessionType" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+              <option value="">-- Pilih Session Type --</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Member</label>
+          <input type="text" id="gtEditMember" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tanggal</label>
+          <input type="date" id="gtEditTanggal" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - Start</label>
+            <input type="time" id="gtEditTimeStart" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Booking Time - End</label>
+            <input type="time" id="gtEditTimeEnd" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" id="gtEditSubmitBtn" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-lg transition">
+            Save Changes
+          </button>
+          <button type="button" id="gtEditCloseBtn" onclick="closeGTEditModal()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Manual Group Detail Modal -->
+  <div id="mgDetailModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl p-6 max-w-2xl w-full my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-extrabold text-slate-800">Manual Group Detail</h3>
+        <button onclick="closeMGDetailModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-5 mb-6">
+        <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">ID</p>
+            <p id="mgDetailID" class="text-base text-slate-900 font-bold">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Created Date</p>
+            <p id="mgDetailCreatedDate" class="text-sm text-slate-900 font-bold">-</p>
+          </div>
+        </div>
+
+        <div class="border-t pt-5">
+          <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Club</p>
+              <p id="mgDetailClub" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Instruktur</p>
+              <p id="mgDetailInstruktur" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Member</p>
+              <p id="mgDetailMember" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Schedule</p>
+              <p id="mgDetailSchedule" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t pt-5">
+          <div class="mb-4">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Status</p>
+            <p id="mgDetailStatus" class="text-lg font-bold text-slate-900">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Notes</p>
+            <p id="mgDetailAdminNotes" class="text-sm text-slate-900 font-semibold">-</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="button" onclick="editMGFromDetail()" id="mgDetailEditBtn" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-pen-to-square mr-2"></i> Edit
+        </button>
+        <button type="button" onclick="deleteMGFromDetail()" id="mgDetailArchiveBtn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-trash mr-2"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manual Group Edit Modal -->
+  <div id="mgEditModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl p-6 max-w-2xl w-full my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-extrabold text-slate-800">Edit Manual Group</h3>
+        <button onclick="closeMGEditModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="mgEditForm" onsubmit="submitMGEditForm(event)" class="space-y-4">
+        <input type="hidden" id="mgEditLogId">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Club</label>
+          <select id="mgEditClub" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+            <option value="">-- Pilih Club --</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-bold text-slate-600">Member</label>
+            <button type="button" onclick="addMGEditMemberField()" class="text-xs text-teal-600 hover:text-teal-700 font-bold">
+              <i class="fa-solid fa-plus mr-1"></i> Add Member
+            </button>
+          </div>
+          <div id="mgEditMemberFieldsContainer" class="space-y-2">
+            <!-- Member fields populated via JS -->
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Schedule - Tanggal</label>
+            <input type="date" id="mgEditScheduleDate" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Schedule - Jam</label>
+            <input type="time" id="mgEditScheduleTime" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" id="mgEditSubmitBtn" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-lg transition">
+            Save Changes
+          </button>
+          <button type="button" id="mgEditCloseBtn" onclick="closeMGEditModal()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Manual Group - Show Members Popup -->
+  <div id="mgMembersPopup" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full">
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-lg font-extrabold text-slate-800">Daftar Member</h3>
+        <button onclick="closeMGMembersPopup()" class="text-2xl text-slate-400 hover:text-slate-600 -mt-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="mgMembersPopupMeta" class="bg-slate-50 rounded-xl p-3 mb-4 space-y-2 text-sm">
+        <!-- Meta info (ID, Schedule, Status) populated via JS -->
+      </div>
+      <div id="mgMembersPopupList" class="space-y-2 max-h-64 overflow-y-auto">
+        <!-- Member list populated via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Time In/Out Detail Modal -->
+  <div id="tioDetailModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl p-6 max-w-2xl w-full my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-extrabold text-slate-800">Time In/Out Detail</h3>
+        <button onclick="closeTioDetailModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-5 mb-6">
+        <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">ID</p>
+            <p id="tioDetailID" class="text-base text-slate-900 font-bold">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Created Date</p>
+            <p id="tioDetailCreatedDate" class="text-sm text-slate-900 font-bold">-</p>
+          </div>
+        </div>
+
+        <div class="border-t pt-5">
+          <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Personal Trainer</p>
+              <p id="tioDetailPTName" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Member</p>
+              <p id="tioDetailMember" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Time</p>
+              <p id="tioDetailType" class="text-base text-slate-900 font-bold">-</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t pt-5">
+          <div class="mb-4">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Status</p>
+            <p id="tioDetailStatus" class="text-lg font-bold text-slate-900">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Notes</p>
+            <p id="tioDetailAdminNotes" class="text-sm text-slate-900 font-semibold">-</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="button" onclick="editTioFromDetail()" id="tioDetailEditBtn" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-pen-to-square mr-2"></i> Edit
+        </button>
+        <button type="button" onclick="deleteTioFromDetail()" id="tioDetailArchiveBtn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-trash mr-2"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time In/Out Edit Modal -->
+  <div id="tioEditModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-extrabold text-slate-800">Edit Time In/Out</h3>
+        <button onclick="closeTioEditModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="tioEditForm" onsubmit="submitTioEditForm(event)" class="space-y-4">
+        <input type="hidden" id="tioEditLogId">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Member</label>
+          <input type="text" id="tioEditMember" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Time</label>
+          <select id="tioEditType" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+            <option value="Time In">Time In</option>
+            <option value="Time Out">Time Out</option>
+          </select>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" id="tioEditSubmitBtn" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-lg transition">
+            Save Changes
+          </button>
+          <button type="button" id="tioEditCloseBtn" onclick="closeTioEditModal()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Approval Modal (Pending Approvals: detail + Approve/Reject) -->
+  <div id="approvalModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[70] p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl p-6 max-w-lg w-full my-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="approvalModalTitle" class="text-xl font-extrabold text-slate-800">Approval Detail</h3>
+        <button type="button" onclick="closeApprovalModal()" class="text-2xl text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-5 mb-6">
+        <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">ID</p>
+            <p id="approvalDetailID" class="text-base text-slate-900 font-bold">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Type</p>
+            <p id="approvalDetailType" class="text-sm text-slate-900 font-bold">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Staff</p>
+            <p id="approvalDetailStaff" class="text-base text-slate-900 font-bold">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Member</p>
+            <p id="approvalDetailMember" class="text-base text-slate-900 font-bold">-</p>
+          </div>
+          <div class="col-span-2">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Detail</p>
+            <p id="approvalDetailInfo" class="text-sm text-slate-900 font-semibold">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Created Date</p>
+            <p id="approvalDetailCreated" class="text-sm text-slate-900 font-bold">-</p>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Status</p>
+            <p id="approvalDetailStatus" class="text-sm font-bold">-</p>
+          </div>
+        </div>
+
+        <div class="border-t pt-5 space-y-4">
+          <div id="approvalExistingNotesWrap" class="hidden">
+            <p id="approvalExistingNotesLabel" class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Notes</p>
+            <p id="approvalDetailAdminNotes" class="text-sm text-slate-900 font-semibold">-</p>
+          </div>
+          <div id="approvalNotesInputWrap">
+            <label for="approvalNotesInput" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Notes (opsional)</label>
+            <textarea id="approvalNotesInput" rows="3" placeholder="Catatan singkat, misal alasan reject..." class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div id="approvalActionButtons" class="flex gap-3">
+        <button type="button" id="approvalRejectBtn" onclick="submitApproval('Rejected')" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-xmark mr-2"></i> Reject
+        </button>
+        <button type="button" id="approvalApproveBtn" onclick="submitApproval('Success')" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg transition">
+          <i class="fa-solid fa-check mr-2"></i> Approve
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Confirm Modal (reusable) -->
+  <div id="customConfirmModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl transform transition-all">
+      <div class="flex justify-center mb-4">
+        <div class="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center">
+          <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-500"></i>
+        </div>
+      </div>
+      <h3 class="text-lg font-extrabold text-slate-800 text-center mb-2">Konfirmasi</h3>
+      <p id="customConfirmMessage" class="text-sm text-slate-600 text-center mb-6">Yakin ingin melanjutkan?</p>
+      <div class="flex gap-3">
+        <button type="button" onclick="closeConfirmModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition">
+          Batal
+        </button>
+        <button type="button" onclick="confirmModalYes()" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2.5 rounded-xl transition">
+          Ya, Lanjutkan
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="src/scripts/config.js"></script>
+  <script src="src/scripts/api.js"></script>
+  <script src="src/scripts/api-adapter.js"></script>
+  <script src="src/scripts/modules/core.js"></script>
+  <script src="src/scripts/modules/navigation.js"></script>
+  <script src="src/scripts/modules/auth.js"></script>
+  <script src="src/scripts/modules/dashboard.js"></script>
+  <script src="src/scripts/modules/pt-portal.js"></script>
+  <script src="src/scripts/modules/admin-ops.js"></script>
+  <script src="src/scripts/modules/report.js"></script>
+  <script src="src/scripts/modules/user-modal.js"></script>
+  <script src="src/scripts/modules/staff.js"></script>
+  <script src="src/scripts/modules/master-data.js"></script>
+</body>
+</html>

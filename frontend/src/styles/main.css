@@ -1,0 +1,224 @@
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .header-gradient {
+      background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .content-sheet {
+      border-top-left-radius: 1.75rem;
+      border-top-right-radius: 1.75rem;
+      margin-top: -1.25rem;
+    }
+
+    .btn-press:active {
+      transform: scale(0.97);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 30;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+    }
+
+    .sidebar-menu {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100vh;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 40;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu.active {
+      left: 0;
+    }
+
+    @media (min-width: 768px) {
+      .sidebar-menu {
+        left: 0;
+        position: fixed;
+        top: 0;
+        height: 100vh;
+        z-index: 20;
+        background: white;
+        border-right: 1px solid #e2e8f0;
+      }
+
+      .sidebar-overlay {
+        display: none !important;
+      }
+
+      .hamburger-btn {
+        display: none !important;
+      }
+
+      .app-layout {
+        margin-left: 280px;
+      }
+
+      .header-top {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .app-layout {
+        margin-left: 0;
+      }
+    }
+
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+    }
+
+    .app-container {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .app-container.active {
+      display: flex;
+    }
+
+    .header-top {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      background: white;
+      z-index: 25;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .header-top {
+        left: 280px;
+      }
+    }
+
+    .main-content {
+      flex: 1;
+      margin-top: 70px;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .profile-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      width: 280px;
+      z-index: 50;
+      margin-top: 0.5rem;
+    }
+
+    .profile-header-card {
+      padding: 1.25rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .profile-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      overflow: hidden;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-info-name {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 0.875rem;
+    }
+
+    .profile-info-email {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    .profile-menu-item {
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #0f172a;
+      font-weight: 500;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .profile-menu-item:hover {
+      background: #f1f5f9;
+    }
+
+    .profile-menu-item i {
+      width: 20px;
+      text-align: center;
+      color: #0284c7;
+    }
+
+    .profile-menu-item.logout {
+      color: #ef4444;
+    }
+
+    .profile-menu-item.logout i {
+      color: #ef4444;
+    }

@@ -1,0 +1,71 @@
+      <!-- ==================== DASHBOARD PAGE (EMPTY) ==================== -->
+      <section id="dashboardPage" class="space-y-6">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-6 border-b pb-4 border-slate-200">
+            <div class="flex items-center space-x-3">
+              <i class="fa-solid fa-chart-line text-2xl text-teal-600"></i>
+              <h2 class="text-2xl font-extrabold text-slate-800">Dashboard</h2>
+            </div>
+            <button type="button" onclick="loadDashboardWidgets()" id="dashboardRefreshBtn" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-lg transition">
+              <i class="fa-solid fa-rotate mr-1"></i> Refresh
+            </button>
+          </div>
+
+          <!-- 1. Ringkasan Cepat -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-teal-50 rounded-xl p-4 border border-teal-200">
+              <p class="text-xs font-bold text-teal-600 uppercase">Sesi Hari Ini</p>
+              <p id="dashSesiHariIni" class="text-3xl font-extrabold text-teal-700 mt-2">-</p>
+              <p class="text-[11px] text-teal-600 mt-1">Personal + Group + Manual Group</p>
+            </div>
+            <div class="bg-sky-50 rounded-xl p-4 border border-sky-200">
+              <p class="text-xs font-bold text-sky-600 uppercase">Sesi Bulan Ini</p>
+              <p id="dashSesiBulanIni" class="text-3xl font-extrabold text-sky-700 mt-2">-</p>
+              <p class="text-[11px] text-sky-600 mt-1">Personal + Group + Manual Group</p>
+            </div>
+            <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
+              <p class="text-xs font-bold text-purple-600 uppercase">Sesi Minggu Ini</p>
+              <p id="dashSesiMingguIni" class="text-3xl font-extrabold text-purple-700 mt-2">-</p>
+              <p class="text-[11px] text-purple-600 mt-1">7 hari terakhir</p>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+              <p class="text-xs font-bold text-amber-600 uppercase">Approval Rate</p>
+              <p id="dashApprovalRate" class="text-3xl font-extrabold text-amber-700 mt-2">-</p>
+              <p id="dashApprovalRateSub" class="text-[11px] text-amber-600 mt-1">30 hari terakhir</p>
+            </div>
+          </div>
+
+          <!-- 2. Grafik Tren -->
+          <div class="mb-8">
+            <h3 class="font-bold text-lg text-slate-800 mb-4">Tren Sesi 7 Hari Terakhir</h3>
+            <div class="bg-slate-50 rounded-xl border border-slate-200 p-4">
+              <canvas id="dashTrendChart" height="90"></canvas>
+            </div>
+          </div>
+
+          <!-- 3. Leaderboard -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <h3 class="font-bold text-lg text-slate-800 mb-4"><i class="fa-solid fa-trophy text-yellow-500 mr-2"></i>Top Pengaju Form Hari Ini</h3>
+              <div id="dashTopStaffList" class="space-y-2">
+                <p class="text-sm text-slate-400">Memuat data...</p>
+              </div>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg text-slate-800 mb-4"><i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i>Reject Rate Tertinggi</h3>
+              <div id="dashTopRejectList" class="space-y-2">
+                <p class="text-sm text-slate-400">Memuat data...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Widget Operasional -->
+          <div>
+            <h3 class="font-bold text-lg text-slate-800 mb-4"><i class="fa-solid fa-hourglass-half text-orange-500 mr-2"></i>Antrian Terlama</h3>
+            <div id="dashAttentionList" class="space-y-2">
+              <p class="text-sm text-slate-400">Memuat data...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+

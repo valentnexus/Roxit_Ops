@@ -1,0 +1,330 @@
+      <section id="staffDetailPage" class="hidden">
+        <div class="flex flex-col md:flex-row gap-6">
+          <!-- Left Sidebar - Staff Profile -->
+          <div class="w-full md:w-80 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 h-fit">
+            <div class="text-center mb-6">
+              <div id="detailStaffAvatar" class="w-20 h-20 rounded-full bg-teal-500 flex items-center justify-center text-white text-4xl mx-auto mb-4 overflow-hidden">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <h2 id="detailStaffName" class="text-2xl font-bold text-slate-800">-</h2>
+              <p id="detailStaffRole" class="text-sm text-slate-500 mt-1">-</p>
+            </div>
+
+            <div class="space-y-4 border-t pt-4">
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase mb-1">Staff ID</p>
+                <p id="detailStaffId" class="text-slate-800 font-semibold">-</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase mb-1">Email</p>
+                <p id="detailStaffEmail" class="text-slate-800 break-all">-</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase mb-1">Phone</p>
+                <p id="detailStaffPhone" class="text-slate-800">-</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase mb-1">Club</p>
+                <p id="detailStaffClub" class="text-slate-800">-</p>
+              </div>
+            </div>
+
+            <div class="flex gap-3 mt-6 border-t pt-4">
+              <button onclick="editStaffDetail()" id="staffDetailEditBtn" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition text-sm">
+                <i class="fa-solid fa-pen-to-square mr-2"></i> Edit
+              </button>
+              <button onclick="goBackToStaff()" class="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 rounded-lg transition text-sm">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Back
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Main Area - Tabs Content -->
+          <div class="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100">
+            <!-- Tab Navigation -->
+            <div class="flex border-b border-slate-200">
+              <button onclick="switchDetailTab('activities')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="activities">
+                <i class="fa-solid fa-history mr-2"></i> Activities
+              </button>
+              <button onclick="switchDetailTab('personaltraining')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="personaltraining">
+                <i class="fa-solid fa-scissors mr-2"></i> Personal Training
+              </button>
+              <button onclick="switchDetailTab('grouptraining')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition hidden" data-tab="grouptraining">
+                <i class="fa-solid fa-users mr-2"></i> Group Training
+              </button>
+              <button onclick="switchDetailTab('manualgroupDetail')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition hidden" data-tab="manualgroupDetail">
+                <i class="fa-solid fa-user-plus mr-2"></i> Manual Group
+              </button>
+              <button onclick="switchDetailTab('timeinout')" class="detail-tab flex-1 px-4 py-4 font-bold text-center border-b-2 border-transparent text-slate-700 hover:bg-slate-50 transition" data-tab="timeinout">
+                <i class="fa-solid fa-clock mr-2"></i> Time In/Out
+              </button>
+            </div>
+
+            <div class="p-6">
+              <!-- Activities Tab -->
+              <div id="activitiesTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-4">Recent Activities</h3>
+                <div id="activitiesListContainer" class="space-y-3">
+                  <p class="text-center text-slate-400 py-8"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...</p>
+                </div>
+              </div>
+
+              <!-- Personal Training Tab -->
+              <div id="personaltrainingTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-6">Personal Training Records</h3>
+                
+                <!-- Filter & Sort -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                  <div class="text-sm text-slate-600">
+                    <span id="ptRecordCount">Showing 0 records</span>
+                  </div>
+                  <div class="flex flex-wrap gap-3 items-center">
+                    <select id="ptStatusFilter" onchange="loadPersonalTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="active" selected>Active</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                    <select id="ptDateFilter" onchange="handlePTDateFilterChange()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="all" selected>All Dates</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisMonth">This Month</option>
+                      <option value="lastMonth">Last Month</option>
+                      <option value="custom">Custom Range</option>
+                    </select>
+                    <div id="ptCustomDateRange" class="hidden flex gap-2 items-center">
+                      <input type="date" id="ptDateFrom" onchange="loadPersonalTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <span class="text-slate-400 text-sm">-</span>
+                      <input type="date" id="ptDateTo" onchange="loadPersonalTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                    </div>
+                    <select id="ptSortOrder" onchange="loadPersonalTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="oldest" selected>Sort: Oldest First</option>
+                      <option value="newest">Sort: Newest First</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto bg-white rounded-xl border border-slate-200">
+                  <table class="w-full text-sm">
+                    <thead class="bg-slate-100">
+                      <tr>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">No</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">ID</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Tanggal</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Member</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Club</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Session Type</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Booking Time Start</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Booking Time End</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Status</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ptRecordsTableBody">
+                      <tr>
+                        <td colspan="10" class="px-4 py-4 text-center text-slate-400">
+                          <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="ptPaginationContainer" class="flex justify-center gap-2 mt-6 hidden">
+                  <button onclick="previousPTPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">← Prev</button>
+                  <div id="ptPageButtons" class="flex gap-1"></div>
+                  <button onclick="nextPTPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">Next →</button>
+                </div>
+              </div>
+
+              <!-- Group Training Tab -->
+              <div id="grouptrainingTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-6">Group Training Records</h3>
+
+                <!-- Filter & Sort -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                  <div class="text-sm text-slate-600">
+                    <span id="gtRecordCount">Showing 0 records</span>
+                  </div>
+                  <div class="flex flex-wrap gap-3 items-center">
+                    <select id="gtStatusFilter" onchange="loadGroupTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="active" selected>Active</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                    <select id="gtDateFilter" onchange="handleGTDateFilterChange()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="all" selected>All Dates</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisMonth">This Month</option>
+                      <option value="lastMonth">Last Month</option>
+                      <option value="custom">Custom Range</option>
+                    </select>
+                    <div id="gtCustomDateRange" class="hidden flex gap-2 items-center">
+                      <input type="date" id="gtDateFrom" onchange="loadGroupTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <span class="text-slate-400 text-sm">-</span>
+                      <input type="date" id="gtDateTo" onchange="loadGroupTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                    </div>
+                    <select id="gtSortOrder" onchange="loadGroupTrainingHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="oldest" selected>Sort: Oldest First</option>
+                      <option value="newest">Sort: Newest First</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto bg-white rounded-xl border border-slate-200">
+                  <table class="w-full text-sm">
+                    <thead class="bg-slate-100">
+                      <tr>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">No</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">ID</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Tanggal</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Member</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Club</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Session Type</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Booking Time Start</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Booking Time End</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Status</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="gtRecordsTableBody">
+                      <tr>
+                        <td colspan="10" class="px-4 py-4 text-center text-slate-400">
+                          <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="gtPaginationContainer" class="flex justify-center gap-2 mt-6 hidden">
+                  <button onclick="previousGTPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">← Prev</button>
+                  <div id="gtPageButtons" class="flex gap-1"></div>
+                  <button onclick="nextGTPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">Next →</button>
+                </div>
+              </div>
+
+              <!-- Manual Group Tab -->
+              <div id="manualgroupDetailTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-6">Manual Group Records</h3>
+
+                <!-- Filter & Sort -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                  <div class="text-sm text-slate-600">
+                    <span id="mgRecordCount">Showing 0 records</span>
+                  </div>
+                  <div class="flex flex-wrap gap-3 items-center">
+                    <select id="mgStatusFilter" onchange="loadManualGroupHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="active" selected>Active</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                    <select id="mgDateFilter" onchange="handleMGDateFilterChange()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="all" selected>All Dates</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisMonth">This Month</option>
+                      <option value="lastMonth">Last Month</option>
+                      <option value="custom">Custom Range</option>
+                    </select>
+                    <div id="mgCustomDateRange" class="hidden flex gap-2 items-center">
+                      <input type="date" id="mgDateFrom" onchange="loadManualGroupHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <span class="text-slate-400 text-sm">-</span>
+                      <input type="date" id="mgDateTo" onchange="loadManualGroupHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                    </div>
+                    <select id="mgSortOrder" onchange="loadManualGroupHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="oldest" selected>Sort: Oldest First</option>
+                      <option value="newest">Sort: Newest First</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto bg-white rounded-xl border border-slate-200">
+                  <table class="w-full text-sm">
+                    <thead class="bg-slate-100">
+                      <tr>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">No</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">ID</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Schedule</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Member</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Club</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Status</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="mgRecordsTableBody">
+                      <tr>
+                        <td colspan="7" class="px-4 py-4 text-center text-slate-400">
+                          <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="mgPaginationContainer" class="flex justify-center gap-2 mt-6 hidden">
+                  <button onclick="previousMGPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">← Prev</button>
+                  <div id="mgPageButtons" class="flex gap-1"></div>
+                  <button onclick="nextMGPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">Next →</button>
+                </div>
+              </div>
+
+              <!-- Time In/Out Tab -->
+              <div id="timeinoutTab" class="detail-tab-content hidden">
+                <h3 class="font-bold text-lg text-slate-800 mb-6">Time In/Out Records</h3>
+
+                <!-- Filter & Sort -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+                  <div class="text-sm text-slate-600">
+                    <span id="tioRecordCount">Showing 0 records</span>
+                  </div>
+                  <div class="flex flex-wrap gap-3 items-center">
+                    <select id="tioStatusFilter" onchange="loadTioHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="active" selected>Active</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                    <select id="tioSortOrder" onchange="loadTioHistory()" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                      <option value="oldest" selected>Sort: Oldest First</option>
+                      <option value="newest">Sort: Newest First</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto bg-white rounded-xl border border-slate-200">
+                  <table class="w-full text-sm">
+                    <thead class="bg-slate-100">
+                      <tr>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">No</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">ID</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Member</th>
+                        <th class="px-4 py-3 text-left font-bold text-slate-700">Time</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Status</th>
+                        <th class="px-4 py-3 text-center font-bold text-slate-700">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tioRecordsTableBody">
+                      <tr>
+                        <td colspan="6" class="px-4 py-4 text-center text-slate-400">
+                          <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat data...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="tioPaginationContainer" class="flex justify-center gap-2 mt-6 hidden">
+                  <button onclick="previousTioPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">← Prev</button>
+                  <div id="tioPageButtons" class="flex gap-1"></div>
+                  <button onclick="nextTioPage()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg">Next →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
